@@ -29,6 +29,10 @@ func main() {
 	var root = fileArgument()
 
 	err := filepath.Walk(root, func(path string, info fs.FileInfo, err error) error {
+		if info == nil {
+			return nil
+		}
+
 		b := info.Name()
 		d := filepath.Dir(path)
 
@@ -36,9 +40,23 @@ func main() {
 
 		if strings.HasPrefix(b, "._") || b == ".DS_Store" {
 			fmt.Println("--- " + ac.Blue(d) + "/" + ac.Yellow(b))
-			err2 := os.Remove(path)
+
+			info, err := os.Stat(path)
+			if err != nil {
+				fmt.Println(err)
+				return nil
+			}
+
+			var err2 error
+
+			if info.IsDir() {
+				err2 = os.RemoveAll(path)
+			} else {
+				err2 = os.Remove(path)
+			}
+
 			if err2 != nil {
-				panic(fmt.Sprintf("Error deleting %s: %s\n", path, err2))
+				fmt.Sprintf("Error deleting %s: %s\n", path, err2)
 			}
 			cleaned += 1
 		} else if slices.Contains(specials, b) {
