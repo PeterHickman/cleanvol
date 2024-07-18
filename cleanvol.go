@@ -56,7 +56,7 @@ func main() {
 			}
 
 			if err2 != nil {
-				fmt.Sprintf("Error deleting %s: %s\n", path, err2)
+				fmt.Printf("Error deleting %s: %s\n", path, err2)
 			}
 			cleaned += 1
 		} else if slices.Contains(specials, b) {
