@@ -13,7 +13,8 @@ import (
 
 func fileArgument() string {
 	if len(os.Args) == 1 {
-		panic("No file argument given")
+		fmt.Println("No file argument given")
+		os.Exit(1)
 	}
 
 	return os.Args[1]
